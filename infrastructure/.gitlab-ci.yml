@@ -1,0 +1,45 @@
+stages:
+  - bootstrap
+  - trigger
+
+bootstrap:
+  stage: bootstrap
+  image: alpine
+  script:
+    - bootstrap
+  artifacts:
+    paths:
+      - ".gitlab-ci.infrastructure.yml"
+  only:
+    refs:
+      - master
+    changes:
+      - "**/*"
+  
+Trigger Dynamic Pipeline:
+  stage: trigger
+  trigger:
+    include:
+      - artifact: '.gitlab-ci.infrastructure.yml'
+        job: bootstrap
+    strategy: depend
+  only:
+    refs:
+      - master
+    changes:
+      - "**/*"
+
+.load_functions: &load_functions |
+  # Loading CI functions...
+  function bootstrap() {
+    for environment in */ ; do
+      for component in $environment*/ ; do
+        local ENVIRONMENT=`basename $environment`
+        local COMPONENT=`basename $component`
+        sed -e "s/%ENVIRONMENT%/${ENVIRONMENT%/}/" -e "s/%COMPONENT%/${COMPONENT%/}/" .gitlab-ci.component.yml.tmpl >> .gitlab-ci.infrastructure.yml
+      done
+    done
+  }
+
+before_script:
+  - *load_functions

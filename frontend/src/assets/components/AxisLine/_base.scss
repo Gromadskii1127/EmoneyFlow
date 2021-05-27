@@ -1,0 +1,44 @@
+.gv-axis-horizon-line {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  width: 100%;
+  border: 1px solid #979797;
+  transform: translateY(-1px);
+  z-index: 101;
+
+  & > .ln-split { 
+    position: absolute;
+    top: -10px;
+    height: 20px;
+    border: 1px solid #979797;
+    transform: translateX(-1px);
+    z-index: 101;
+  }
+
+  & > .ln-label {
+    position: absolute;
+    top: 20px;
+    transform: translateX(-50%);
+  }
+}
+
+.gv-axis-vertical-line {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  height: 100%;
+  border: 1px solid #979797;
+  transform: translateX(-1px);
+  z-index: 101;
+}
+
+.gv-axis-horizon-name {
+  position: absolute;
+  transform: translateY(-50%) translateX(-110%);
+}
+
+.gv-axis-vertical-name {
+  position: absolute;
+  transform: translateY(-120%) translateX(-50%);
+}

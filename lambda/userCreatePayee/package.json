@@ -1,0 +1,11 @@
+{
+  "name": "userpayeecreate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node -e \"(async () => console.log(await require('./test').handler()))();\""
+  },
+  "author": "",
+  "license": "ISC"
+}

@@ -1,0 +1,33 @@
+// Note: load the file via @use.
+
+/// Get a color from the palette.
+///
+/// @param {map} $palette The palette variable.
+/// @param {number} $color-weight The color weight: 50, 100 .. 900.
+/// @return {color} The color.
+@function color($palette, $color-weight: 'default') {
+  $weight-list: ('default', 50, 100, 200, 300, 400, 500, 600, 700, 800, 900);
+  @if $color-weight == 'default' {
+    @return map-get($palette, map-get($palette, 'default'));
+  }
+  @if not index($weight-list, $color-weight) {
+    @warn 'Invalid color weight `#{$color-weight}`. Will be return default color of palette.';
+    @return color($palette, 'default');
+  }
+  @return map-get($palette, $color-weight);
+}
+
+/// Get the contrast color of palette color.
+///
+/// @param {map} $palette The palette variable.
+/// @param {number} $color-weight The color weight: 50, 100 .. 900.
+/// @return {color} The color.
+@function contrast-color($palette, $color-weight: 'default') {
+  // Get contrast color tone in palette.
+  @if $color-weight == 'default' {
+    $color-weight: map-get($palette, 'default');
+  }
+  $contrast: map-get(map-get($palette, contrast), $color-weight);
+
+  @return map-get($palette, $contrast);
+}

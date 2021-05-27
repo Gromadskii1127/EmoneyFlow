@@ -1,0 +1,12 @@
+// Configuration of variables. This file must be loaded first.
+
+// The example how override defaults variables from your theme
+/*@use '@Styles/abstracts/variables' as * with (
+  // here override default variables
+
+  // the base URL of new theme
+  $base-url: '/assets/',
+);*/
+
+// export configured variables
+@forward '../../abstracts/variables';

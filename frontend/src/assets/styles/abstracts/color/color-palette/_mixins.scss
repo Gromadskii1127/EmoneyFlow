@@ -1,0 +1,61 @@
+@use 'functions' as *;
+
+/// Create css styles of color palette.
+/// Css color styles:
+/// .palette-XXXXXX-default{..}
+/// .palette-XXXXXX-50{..}
+/// .palette-XXXXXX-100{..}
+/// .palette-XXXXXX-200{..}
+/// .palette-XXXXXX-300{..}
+/// .palette-XXXXXX-400{..}
+/// .palette-XXXXXX-500{..}
+/// .palette-XXXXXX-600{..}
+/// .palette-XXXXXX-700{..}
+/// .palette-XXXXXX-800{..}
+/// .palette-XXXXXX-900{..}
+///
+/// Css background-color styles:
+/// .palette-XXXXXX-bg-default{..}
+/// .palette-XXXXXX-bg-50{..}
+/// .palette-XXXXXX-bg-100{..}
+/// .palette-XXXXXX-bg-200{..}
+/// .palette-XXXXXX-bg-300{..}
+/// .palette-XXXXXX-bg-400{..}
+/// .palette-XXXXXX-bg-500{..}
+/// .palette-XXXXXX-bg-600{..}
+/// .palette-XXXXXX-bg-700{..}
+/// .palette-XXXXXX-bg-800{..}
+/// .palette-XXXXXX-bg-900{..}
+///
+/// Where:
+///    palette-XXXXXX is the palette name,
+///    c50, c100, .. is color weight.
+///
+/// @param {map} $palette The palette variable.
+/// @param {string} $name-prefix The palette name prefix. Defaults is palette name from map.
+@mixin create-palette($palette, $prefix: '') {
+  @if $prefix == '' {
+    $prefix: map-get($palette, name);
+  }
+
+  .#{$prefix + '-default'} {
+    color: color($palette, 'default');
+  }
+
+  .#{$prefix + '-bg-default'} {
+    color: contrast-color($palette, 'default');
+    background-color: color($palette, 'default');
+  }
+
+  @each $weight, $color in $palette {
+    @if index(('name', 'default', 'light', 'dark', 'contrast'), $weight) == null {
+      .#{$prefix + '-' + $weight} {
+        color: #{$color};
+      }
+      .#{$prefix + '-bg-' + $weight} {
+        color: contrast-color($palette, $weight);
+        background-color: #{$color};
+      }
+    }
+  }
+}

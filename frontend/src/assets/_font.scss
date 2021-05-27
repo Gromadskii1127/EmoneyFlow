@@ -1,0 +1,42 @@
+.font-tiny {
+  font-size: 11px !important;
+}
+
+.font-small {
+  font-size: 12px !important;
+}
+
+.font-medium {
+  font-size: 14px !important;
+}
+.font-x-medium {
+  font-size: 16px !important;
+}
+.font-big {
+  font-size: 18px !important;
+}
+.font-x-big {
+  font-size: 24px !important;
+}
+.font-large {
+  font-size: 28px !important;
+}
+
+.font-x-large {
+  font-size: 36px !important;
+}
+
+.font-bold {
+  font-weight: bold !important;
+}
+.font-semi-bold {
+  font-weight: 600 !important;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  font-weight: 600 // Semi bold
+}
+.font-cursor-default {
+  cursor: default !important;
+}

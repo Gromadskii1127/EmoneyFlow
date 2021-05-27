@@ -1,0 +1,16 @@
+@use '../../abstracts/variables' as *;
+
+$font-path: '#{$font-url}helvetica-neue';
+
+@font-face {
+  font-family: 'Helvetica Neue';
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  src: local('Helvetica Neue'),
+  url('#{$font-path}/Helvetica Neue Regular.woff2') format('woff2'),
+  url('#{$font-path}/Helvetica Neue Regular.woff') format('woff');
+}
+
+// module export
+$font-family: "Helvetica Neue", Helvetica, sans-serif;

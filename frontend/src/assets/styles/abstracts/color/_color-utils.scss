@@ -1,0 +1,92 @@
+@use 'sass:math';
+
+$light-color: white !default;
+$dark-color: rgba(black, .87) !default;
+$minimumContrast: 4.5 !default;
+
+/// Calculate linear color channel values, for use in contrast calculations.
+/// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+///
+/// @access private
+/// @param {number} The color channel value 0..255
+/// @return {number}
+@function linear-rgb-channel-value($color-channel-value) {
+  $value: 0;
+  $color-channel-value: $color-channel-value / 255;
+
+  //noinspection CssInvalidFunction math.pow()
+  @return if($color-channel-value < 0.03928, ($color-channel-value / 12.92), math.pow(($color-channel-value + 0.055) / 1.055, 2.4));
+}
+
+/// Calculate the luminance for a color.
+/// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+///
+/// @access private
+/// @param {color} $color
+/// @return {number} The luminance of color.
+@function color-luminance($color) {
+  $red: linear-rgb-channel-value(red($color));
+  $green: linear-rgb-channel-value(green($color));
+  $blue: linear-rgb-channel-value(blue($color));
+
+  @return .2126 * $red + .7152 * $green + .0722 * $blue;
+}
+
+/// Calculate the contrast ratio between two colors.
+/// See https://www.w3.org/TR/WCAG20-TECHS/G17.html#G17-tests
+///
+/// @access private
+/// @param {color} $back
+/// @param {color} $front
+/// @return {number} The contrast ratio.
+@function color-contrast-ratio($back, $front) {
+  $backLum: color-luminance($back) + .05;
+  $foreLum: color-luminance($front) + .05;
+
+  @return math.max($backLum, $foreLum) / math.min($backLum, $foreLum);
+}
+
+/// Get a color of the tone.
+///
+/// @param {string} $tone The tone of color: 'dark' or 'light', defaults is 'dark'.
+/// @return {color} The color of light or dark tone.
+@function tone-color($tone: 'dark') {
+  @return if($tone == 'light', $light-color, $dark-color);
+}
+
+/// Get a tone, 'light' or 'dark', of the color.
+/// Minimum ratio (AA rating) - 4.5
+/// Enhanced ratio (AAA rating) - 7.0
+/// See https://developer.mozilla.org/en-US/docs/Web/Accessibility/Understanding_WCAG/Perceivable/Color_contrast
+///
+/// @param {color} $color
+/// @param {number} $contrast The minimal contrast ratio.
+/// @return {string} The type of color tone: 'dark' or 'light'.
+@function color-tone($color, $contrast: $minimumContrast) {
+  @if $color == 'dark' or $color == 'light' {
+    @return $color;
+  }
+
+  $lightContrast: color-contrast-ratio($color, $light-color);
+  $darkContrast: color-contrast-ratio($color, $dark-color);
+
+  @return if($lightContrast < $minimumContrast and $darkContrast > $lightContrast, 'light', 'dark');
+}
+
+/// Determine whether to use dark or light text on top of given color to meet accessibility standards for contrast.
+///
+/// @param {color} $color
+/// @return {string} 'dark' if the given color is light and 'light' if the given color is dark.
+@function contrast-color-tone($color) {
+  @return if(color-tone($color) == 'dark', 'light', 'dark');
+}
+
+/// Get contrast of a color: $light or $dark.
+///
+/// @param {color} $color A color.
+/// @param {color} $light [$light-color] The light color will be returned if contrast tone is light.
+/// @param {color} $dark [$dark-color] The dark color will be returned if contrast tone is dark.
+/// @return {color}
+@function contrast-color($color, $light: $light-color, $dark: $dark-color) {
+  @return if(color-tone($color) == 'dark', $light, $dark);
+}

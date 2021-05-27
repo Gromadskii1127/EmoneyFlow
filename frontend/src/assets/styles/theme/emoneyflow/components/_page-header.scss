@@ -1,0 +1,32 @@
+@use '../../../abstracts/variables' as *;
+
+$header-height: 70px;
+$bg-header: #05243f;
+
+.app-header-container {
+  width: 100%;
+  height: $header-height;
+}
+
+.app-header {
+  //background-color: $bg-header;
+
+  .nav-logo {
+    align-items: center;
+
+    .header-logo {
+      display: inline-flex;
+      width: 226px;
+      height: 22px;
+      background-image: url($image-url + 'logo.svg');
+      background-size: cover;
+    }
+
+    .page-title {
+      margin-left: 30px;
+      font-size: 13px;
+      text-transform: uppercase;
+      color: #fff;
+    }
+  }
+}

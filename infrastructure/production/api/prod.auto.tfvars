@@ -1,0 +1,5 @@
+getTransactionListInvokeArn = "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:970825508194:function:getTransactionList/invocations"
+getCompanyListInvokeArn = "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:970825508194:function:getCompanyList/invocations"
+getCompanyByIdInvokeArn = "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:970825508194:function:getCompanyById/invocations"
+deleteCompanyByIdInvokeArn = "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:970825508194:function:deleteCompanyById/invocations"
+updateCompanyByIdInvokeArn = "arn:aws:apigateway:eu-central-1:lambda:path/2015-03-31/functions/arn:aws:lambda:eu-central-1:970825508194:function:updateCompanyById/invocations"

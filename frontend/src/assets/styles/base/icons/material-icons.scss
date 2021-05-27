@@ -1,0 +1,27 @@
+// See https://material.io/icons/
+@use '../../abstracts/index' as *;
+
+$font-path: '#{$font-url}MaterialIcons';
+$font-family: 'Material Icons';
+
+@font-face {
+  font-family: '#{$font-family}';
+  font-style: normal;
+  font-weight: 400;
+  // IE6-IE8
+  //src: url('#{$mat-font-path}/MaterialIcons-Regular.eot');
+  src: local('Material Icons'),
+  local('MaterialIcons-Regular'),
+  url('#{$font-path}/MaterialIcons-Regular.woff2') format('woff2'),
+  url('#{$font-path}/MaterialIcons-Regular.woff') format('woff'),
+  url('#{$font-path}/MaterialIcons-Regular.ttf') format('truetype');
+}
+
+@mixin mat-icon {
+  @include icon($font-family);
+}
+
+// Default `.icon` class is material design, or use specific class `.mat`
+.mat-icon {
+  @include mat-icon();
+}

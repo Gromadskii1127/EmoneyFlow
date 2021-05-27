@@ -1,0 +1,11 @@
+// Default system mono font w/o load font files.
+
+@mixin font-mono-consolas {
+  font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace !important;
+  // min default line height is 125%
+  line-height: 125%;
+}
+
+@mixin font-family {
+  @include font-mono-consolas;
+}

@@ -1,0 +1,197 @@
+@use 'sass:color';
+@use 'sass:math';
+@use 'sass:map';
+@use '../variables' as *;
+
+/// Build color color set for pseudo classes: :hover, :active, :focus
+///
+/// @param $color The base color of element.
+/// @param $contrastFactor The gain factor of color contrast.
+///     Default is 1. Value is float, min 0, max 3.
+///     If $contrastFactor < 1 then revert darken/lighten.
+@function pseudo-colors($color, $contrastFactor: 1) {
+  $contrast: #fff;
+  $minValue: 5%;
+  $maxValue: 45%;
+
+  $focusAmount: math.min(math.max($minValue, math.abs($contrastFactor * 10%)), $maxValue);
+  $hoverAmount: math.min(math.max($minValue, math.abs($contrastFactor * 10%)), $maxValue);
+  $activeAmount: math.min(math.max($minValue, math.abs($contrastFactor * 25%)), $maxValue);
+  $checkedAmount: math.min(math.max($minValue, math.abs($contrastFactor * 10%)), $maxValue);
+
+  $focus: color.scale($color, $lightness: -$focusAmount);
+  $hover: color.scale($color, $lightness: $hoverAmount);
+  $active: color.scale($color, $lightness: $activeAmount);
+  $checked: color.scale($color, $lightness: $checkedAmount);
+
+  @if ($contrastFactor < 0) {
+    $focus: color.scale($color, $lightness: $focusAmount);
+    $hover: color.scale($color, $lightness: -$hoverAmount);
+    $active: color.scale($color, $lightness: -$activeAmount);
+    $checked: color.scale($color, $lightness: -$checkedAmount);
+  }
+
+  @return (
+    'contrast': $contrast,
+    'focus': $focus,
+    'hover': $hover,
+    'active': $active,
+    'checked': $checked,
+  );
+}
+
+@function disable-colors($color: $disable-color) {
+  $contrast: color.scale($color, $lightness: -25%);
+  $pseudo-colors: pseudo-colors($color);
+  @return (
+    'contrast': $contrast,
+    'default': $color,
+    'focus': map.get($pseudo-colors, 'focus'),
+    'hover': map.get($pseudo-colors, 'hover'),
+    'checked': map.get($pseudo-colors, 'checked')
+  )
+}
+
+/// Button pseudo colors for background.
+///
+/// @param $color The base color in hex format.
+/// @param $contrastFactor The gain factor of color contrast.
+///     Default is 1. Value is float, min 0, max 3.
+///     If $contrastFactor < 1 then revert darken/lighten.
+@mixin btn-pseudo-color($color, $contrastFactor: 1) {
+  $pseudo-colors: pseudo-colors($color, $contrastFactor);
+  $disable-colors: disable-colors();
+
+  background-color: $color;
+  &:hover {
+    background-color: map.get($pseudo-colors, 'hover');
+  }
+  &:focus {
+    background-color: map.get($pseudo-colors, 'focus');
+  }
+  &:active {
+    background-color: map.get($pseudo-colors, 'active');
+  }
+  &:checked {
+    background-color: map.get($pseudo-colors, 'checked');
+  }
+  &[disabled] {
+    color: map.get($disable-colors, 'contrast');
+    background-color: map.get($disable-colors, 'default');
+
+    &:focus {
+      background-color: map.get($disable-colors, 'focus');
+    }
+  }
+}
+
+/// Button pseudo gradient for background.
+///
+/// @param $gradient-definition The definition of the gradient: <angle> (e.g.: 45deg) or <side-or-corner> (e.g.: to right)
+/// @param $color1 The start color in hex format.
+/// @param $color1 The end color in hex format.
+/// @param $contrastFactor The gain factor of color contrast.
+///     Default is 1. Value is float, min 0, max 3.
+///     If $contrastFactor < 1 then revert darken/lighten.
+@mixin btn-pseudo-gradient($gradient-definition, $color1, $color2, $contrastFactor: 1) {
+  $pseudo-colors1: pseudo-colors($color1, $contrastFactor);
+  $pseudo-colors2: pseudo-colors($color2, $contrastFactor);
+  $disable-colors: disable-colors();
+
+  background-image: linear-gradient($gradient-definition, $color1, $color2);
+  &:hover {
+    background-image: linear-gradient($gradient-definition, map.get($pseudo-colors1, 'hover'), map.get($pseudo-colors2, 'hover'));
+  }
+  &:focus {
+    background-image: linear-gradient($gradient-definition, map.get($pseudo-colors1, 'focus'), map.get($pseudo-colors2, 'focus'));
+  }
+  &:active {
+    background-image: linear-gradient($gradient-definition, map.get($pseudo-colors1, 'active'), map.get($pseudo-colors2, 'active'));
+  }
+  &:checked {
+    background-image: linear-gradient($gradient-definition, map.get($pseudo-colors1, 'checked'), map.get($pseudo-colors2, 'checked'));
+  }
+  &[disabled] {
+    color: map.get($disable-colors, 'contrast');
+    background-color: map.get($disable-colors, 'default');
+
+    &:focus {
+      background-color: map.get($disable-colors, 'focus');
+    }
+  }
+}
+
+/// Text / link pseudo colors.
+/// @param $color The base color in hex format.
+/// @param $decoration Whether a text by event will be decorated.
+/// @param $contrastFactor The gain factor of color contrast.
+///     Default is 1. Value is float, min 0, max 3.
+///     If $contrastFactor < 1 then revert darken/lighten.
+@mixin text-pseudo-color($color, $decoration: false, $contrastFactor: 1.5) {
+  $pseudo-colors: pseudo-colors($color, $contrastFactor);
+  $disable-colors: disable-colors();
+
+  color: $color;
+  &:hover {
+    color: map.get($pseudo-colors, 'hover');
+    @if ($decoration != false) {
+      text-decoration-line: underline;
+    }
+  }
+  &:focus {
+    color: map.get($pseudo-colors, 'focus');
+    @if ($decoration != false) {
+      text-decoration-line: underline;
+    }
+  }
+  &:active {
+    color: map.get($pseudo-colors, 'active');
+    @if ($decoration != false) {
+      text-decoration-line: underline;
+    }
+  }
+  &:checked {
+    color: map.get($pseudo-colors, 'checked');
+    @if ($decoration != false) {
+      text-decoration-line: underline;
+    }
+  }
+  &[disabled] {
+    color: map.get($disable-colors, 'default');
+
+    &:focus {
+      color: map.get($disable-colors, 'focus');
+    }
+  }
+}
+
+/// Toggle pseudo colors.
+/// @param $color The base color in hex format.
+@mixin toggle-pseudo-color($color) {
+  $pseudo-colors: pseudo-colors($color, 1);
+  $disable-colors: disable-colors();
+  $contrast-color: map.get($pseudo-colors, 'contrast');
+
+  // by keyboard navigation the current cursor has .selected == :hover
+  &:hover {
+    color: $contrast-color;
+    background-color: $color;
+  }
+  &.selected,
+  &:focus {
+    color: $contrast-color;
+    background-color: $color;
+  }
+  &:active {
+    color: $contrast-color;
+    background-color: map.get($pseudo-colors, 'active');
+  }
+  &:checked {
+    color: $contrast-color;
+    background-color: map.get($pseudo-colors, 'checked');
+  }
+  &[disabled] {
+    color: map.get($disable-colors, 'contrast');
+    background-color: transparent;
+  }
+}

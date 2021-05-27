@@ -1,0 +1,59 @@
+@use 'color/color-palette';
+
+/// Relative or absolute URL where all assets are served.
+$base-url: '/assets/' !default;
+$image-url: $base-url + 'images/' !default;
+$font-url: $base-url + 'fonts/' !default;
+
+// Usage a-tag text decoration.
+$link-decoration: false !default;
+
+$default-fontsize: 16px !default;
+
+$disable-color: color-palette.color(color-palette.$gray, 200) !default;
+$disable-color-contrast: color-palette.contrast-color(color-palette.$gray, 200) !default;
+
+// Primary colors
+//$primary-palette: color-palette.$primary !default;
+$primary-color: #05243f !default;
+//$primary-color-light: color-palette.color($primary-palette, 100) !default;
+//$primary-color-dark: color-palette.color($primary-palette, 800) !default;
+$primary-color-contrast: #fff !default;
+//$primary-color-light-contrast: color-palette.contrast-color($primary-palette, 100) !default;
+//$primary-color-dark-contrast: color-palette.contrast-color($primary-palette, 900) !default;
+
+// Secondary colors
+//$secondary-palette: color-palette.$secondary !default;
+$secondary-color: #228fee !default;
+//$secondary-color-light: color-palette.color($secondary-palette, 100) !default;
+//$secondary-color-dark: color-palette.color($secondary-palette, 500) !default;
+$secondary-color-contrast: #fff !default;
+//$secondary-color-light-contrast: color-palette.contrast-color($secondary-palette, 100) !default;
+//$secondary-color-dark-contrast: color-palette.contrast-color($secondary-palette, 500) !default;
+
+// Tertiary colors
+//$tertiary-palette: color-palette.$tertiary !default;
+$tertiary-color: #22eec1 !default;
+//$tertiary-color-light: color-palette.color($tertiary-palette, 100) !default;
+//$tertiary-color-dark: color-palette.color($tertiary-palette, 800) !default;
+$tertiary-color-contrast: #fff !default;
+//$tertiary-color-light-contrast: color-palette.contrast-color($tertiary-palette, 100) !default;
+//$tertiary-color-dark-contrast: color-palette.contrast-color($tertiary-palette, 500) !default;
+
+// Accent colors
+//$accent-palette: color-palette.$red !default;
+$accent-color: #e4122b !default;
+//$accent-color-light: color-palette.color($accent-palette, 50) !default;
+//$accent-color-dark: color-palette.color($accent-palette, 900) !default;
+$accent-color-contrast: #fff !default;
+//$accent-color-light-contrast: color-palette.contrast-color($accent-palette, 50) !default;
+//$accent-color-dark-contrast: color-palette.contrast-color($accent-palette, 900) !default;
+
+// Gray colors
+//$gray-palette: color-palette.$gray !default;
+$gray-color: #7b7b7b !default;
+//$gray-color-light: color-palette.color($gray-palette, 50) !default;
+//$gray-color-dark: color-palette.color($gray-palette, 900) !default;
+$gray-color-contrast: #fff !default;
+//$gray-color-light-contrast: color-palette.contrast-color($gray-palette, 50) !default;
+//$gray-color-dark-contrast: color-palette.contrast-color($gray-palette, 900) !default;

@@ -1,0 +1,29 @@
+Deploy %SERVICE% to Production:
+  trigger:
+    include: .gitlab-ci.lambda.yml
+    strategy: depend
+  variables:
+    SERVICE_NAME: "%SERVICE%"
+    ENVIRONMENT: "production"
+  only:
+    refs:
+      - master
+    changes:
+      - "%SERVICE%/**/*"
+      - "*.tmpl"
+      - "*.yml"
+
+Deploy %SERVICE% to Staging:
+  trigger:
+    include: .gitlab-ci.lambda.yml
+    strategy: depend
+  variables:
+    SERVICE_NAME: "%SERVICE%"
+    ENVIRONMENT: "staging"
+  only:
+    refs:
+      - develop
+    changes:
+      - "%SERVICE%/**/*"
+      - "*.tmpl"
+      - "*.yml"

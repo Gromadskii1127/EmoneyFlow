@@ -1,0 +1,37 @@
+// The Next-Generation Sass Module System
+@use "styles/main";
+
+// Core
+
+@import "core";
+
+// Fonts (see src/assets/styles/base/_typography.scss)
+
+// TODO: refactoring styles with modern module system und remove to assets/styles/
+
+// Widgets
+
+@import "widgets";
+
+// Components
+@import "components";
+
+// Layout Components
+
+@import "layout-components";
+
+// Layout Blueprints
+
+@import "layout-blueprints";
+
+// Colors
+@import "colors";
+
+// Font Size
+@import "font";
+
+// Sizes
+@import "sizes";
+
+//Screen
+@import "screens";

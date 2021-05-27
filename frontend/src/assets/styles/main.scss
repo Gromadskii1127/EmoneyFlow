@@ -1,0 +1,32 @@
+/// The main builder of all global styles.
+
+// lib for include wrapped styles
+//@use 'sass:meta';
+// This is a example of wrap all styles:
+//.theme-name {
+//  @include meta.load-css('@Theme/layout');
+//}
+
+// The config must be loaded at first.
+@use 'theme/emoneyflow/config';
+
+// Load default font.
+//@use 'base/fonts/roboto' as font;
+
+// Load custom icons, defaults the `material-icons` must be loaded.
+@use 'base/icons/material-icons';
+@use 'base/icons/emoneyflow';
+
+// Normalize styles.
+@use 'base/normalize';
+@use 'base/shadows';
+/*@use 'base/typography' with (
+  $font-family: font.$font-family,
+  $font-family-rounded: font.$font-family-rounded,
+  $font-size: config.$default-fontsize
+);*/
+
+// Theme styles.
+@use 'theme/emoneyflow/layout';
+@use 'theme/emoneyflow/components';
+@use 'theme/emoneyflow/pages/page-not-found';

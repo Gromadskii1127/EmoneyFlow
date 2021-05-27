@@ -1,0 +1,36 @@
+stages:
+  - deploy
+
+.deploy:
+  stage: deploy
+  image: "python:3.7"
+  before_script:
+    - set -u
+    - apt-get update -y
+    - apt-get install -y zip jq nodejs npm
+    - pip install awscli
+    - eval $(aws sts assume-role --role-arn $S3_ROLE_ARN --role-session-name "GitLab-CI-Session-$CI_JOB_ID" | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
+
+.deploy:lambda:
+  extends: .deploy
+  script:
+    - cd $SERVICE_NAME
+    - if [[ -f package.json ]]; then npm i ; if [[ -d node_modules ]]; then mv node_modules src/. ;fi fi
+    - cd src
+    - zip -r $SERVICE_NAME.zip .
+    - aws s3 cp $SERVICE_NAME.zip s3://$S3_BUCKET_NAME/$SERVICE_NAME.zip    
+    - aws configure set region eu-central-1
+    - |
+      if [[ $SERVICE_NAME == *"Layer"* ]]; then
+        echo publish layer $SERVICE_NAME
+        aws lambda publish-layer-version --layer-name $SERVICE_NAME --content S3Bucket=$S3_BUCKET_NAME,S3Key=$SERVICE_NAME.zip
+      else
+        echo publish function $SERVICE_NAME
+        aws lambda publish-version --function-name $SERVICE_NAME
+      fi
+
+Deploy Lambda:
+  extends: .deploy:lambda
+  environment:
+    name: $ENVIRONMENT/$SERVICE_NAME
+

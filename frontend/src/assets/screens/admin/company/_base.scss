@@ -1,0 +1,97 @@
+@import '../../variable';
+
+.company-add-button{
+  font-size: 12px !important;
+  color: black !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.87px !important;
+}
+
+.company-drawer-paper{
+  background-color: transparent !important;
+}
+
+.company-drawer-container {
+  max-height: calc(100vh - 80px);  
+  height: calc(100vh - 80px);  
+}
+
+.company-drawer-divider {
+  margin-top: 20px;
+  margin-bottom: 20px;
+  margin-left: 30px;
+}
+.company-drawer-content-header {
+  height: 60px
+}
+
+.company-drawer-close-button {
+  border-radius: 0 !important;
+  width: 50px;
+  height: 50px;
+  color: $trans_drawer_button_color;
+  margin-left: 5px !important;
+}
+
+.company-drawer-save-button {
+  border-radius: 0 !important;
+  width: 180px;
+  height: 34px;
+  color: $trans_drawer_button_color;
+  background-color: $color-228fee !important;
+  font-size: 12px !important;
+  font-weight: bold !important;
+  margin-right: 30px !important;
+}
+
+.company-drawer-main-flex {
+  flex: 1
+}
+
+.company-normal-textfield{
+  & > div > div > p {
+    font-size: 14px !important;
+    font-weight: bold !important;
+  }
+  & > div > input {
+    font-size: 14px !important;
+    font-weight: normal !important;
+  }
+  & > div > input::placeholder {
+    font-size: 14px !important;
+    font-weight: normal !important;
+  }
+}
+.company-title-textfield{
+  & > div > div > p {
+    font-size: 28px !important;
+    font-weight: bold !important;
+  }
+  & > div > input {
+    font-size: 28px !important;
+    font-weight: bold !important;
+  }
+  & > div > input::placeholder {
+    font-size: 28px !important;
+    font-weight: normal !important;
+  }
+}
+
+.company-drawer-main-spacer
+{
+  width: 30px !important;
+}
+
+.comapny-drawer-subtable{
+  padding-left: 14px;
+  margin-top: 100px;  
+}
+.company-drawer-subtitle{
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.company-drawer-table-content{
+  overflow-y: auto;
+  overflow-x: hidden;
+}

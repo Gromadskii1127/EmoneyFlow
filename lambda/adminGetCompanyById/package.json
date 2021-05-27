@@ -1,0 +1,11 @@
+{
+  "name": "admincompanygetbyid",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "node -e \"(async () => console.log(await require('./src/index').handler({id: 1})))();\""
+  },
+  "author": "",
+  "license": "ISC"
+}

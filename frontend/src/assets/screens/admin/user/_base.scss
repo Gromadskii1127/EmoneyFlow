@@ -1,0 +1,49 @@
+@import '../../variable';
+.user-dialog{
+  width: 445px;
+  height: 271px;
+  border-radius: 15px !important;
+}
+.user-dialog-content
+{
+
+}
+.user-dialog-title{
+
+}
+.user-dialog-icon-container{
+  margin-top: -10px;
+}
+.user-dialog-icon{
+  font-size: 80px;
+  color: $emoneytable-select-cell-color;
+}
+
+.user-dialog-title{
+  font-size: 24px;
+  font-weight: bold;
+  margin-top: 5px;
+}
+
+.user-dialog-content{
+  font-size: 16px;  
+  margin-top: 5px;
+}
+
+.user-dialog-button{  
+  height: 34px !important;
+  font-size: 12px !important;  
+  text-transform: uppercase;
+}
+
+.user-dialog-button-container{  
+  margin-top: 30px !important;
+  
+}
+.user-reset-dialog-button{
+  background-color:$color-fdc93d !important;
+}
+.user-dialog-button-red
+{
+  background-color: red !important;
+}

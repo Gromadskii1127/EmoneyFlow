@@ -1,0 +1,26 @@
+@use '../../../../abstracts' as *;
+
+// Link.
+// @note: A-tag as control element without inner content MUST have the class name `.ctrl`
+// because the layout has a complex structure with outer A-tag that is not a control A-tag.
+// Samples:
+//  // here MUST be class `.ctrl`
+//  <a class="ctrl" href="">Link to page</a>
+//
+//  // here is not allowed the class `.ctrl`
+//  <a href="">
+//    <div class="product-card">
+//      ...
+//    </div>
+//  </a>
+
+a:not(.ctrl) {
+  text-decoration: none;
+}
+
+a.ctrl {
+  font-weight: normal;
+  text-decoration: if($link-decoration != false, underline, none);
+
+  // todo include mixin text-pseudo-color
+}

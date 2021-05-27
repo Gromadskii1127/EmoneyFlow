@@ -1,0 +1,2634 @@
+openapi: 3.0.1
+info:
+  title: Emoneyflow API
+  version: '2021-03-12'
+servers:
+  - url: 'https://n1mmrypui0.execute-api.us-east-1.amazonaws.com/{basePath}'
+    variables:
+      basePath:
+        default: /dev
+tags:
+  - name: AdminCompany
+    description: Everything admin operation about Company
+  - name: AdminUser
+    description: Everything admin operation about User
+  - name: AdminTransaction
+    description: Admin Apis for about Transaction
+  - name: UserDashboard
+    description: Dashboard Apis for User Transaction
+  - name: Payee
+    description: User Payee Apis
+  - name: Payout
+    description: User Payout Apis
+  - name: User
+    description: User Operations
+  - name: UserTransaction
+    description: Every Apis for user transaction
+paths:
+  /admin/transaction:
+    get:
+      summary: Search and Get Admin Transaction API.
+      description: >-
+        This is api which is getting admin transaction records from elastic
+        search. By using this api, we can search all transactions on the project
+      tags:
+        - AdminTransaction
+      parameters:
+        - name: keyword
+          in: query
+          description: Search keyword. Optional
+          schema:
+            type: string
+        - name: countPerPage
+          description: Number of objects to be returned. Optional. Defaults to 10
+          in: query
+          schema:
+            type: string
+        - name: pageIndex
+          description: 'Page index for searched list. Optional. Defaults : 1'
+          in: query
+          schema:
+            type: string
+        - name: fromDate
+          description: From date to search transaction
+          in: query
+          schema:
+            type: string
+        - name: toDate
+          description: To date to search transaction
+          in: query
+          schema:
+            type: string
+        - name: method
+          description: >-
+            Type of transaction type. Default -1 or null. -1: All, 0: Sepa 1:
+            OCT RUSSIA, 2: CC USA, 3: CC EUROPA, 4: CC PAGAFLEX, 5: COMXBANK, 6:
+            MX PAGEFLEX 
+          in: query
+          schema:
+            type: integer
+        - name: currency
+          description: Currency to search currency. Defaul EUR.
+          in: query
+          schema:
+            type: string
+        - name: status
+          description: >-
+            Status for search filter. Default null. null: All, paid: Paid
+            Transactions, pending: Pending Transactions, discarded: Declined,
+            failed: Error
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminGetTransactionsInvokeArn}'
+        responses:
+          '401':
+            statusCode: '401'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /admin/user:
+    summary: Admin User Operation Api
+    description: |
+      Gets all admins by criteria, Creates a User, Deletes a User, Updats a User
+    get:
+      tags:
+        - AdminUser
+      summary: Gets list of users by criteria.
+      description: >
+        Gets a list of users by keyword, count per page, page index parameter.
+        The filtered users can be returned array of json object.
+      parameters:
+        - name: keyword
+          description: Search keyword. Optional
+          in: query
+          schema:
+            type: string
+        - name: countPerPage
+          description: Number of objects to be returned. Optional. Defaults to 10
+          in: query
+          schema:
+            type: integer
+        - name: pageIndex
+          description: 'Page index for searched list. Optional. Defaults : 1'
+          in: query
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminGetUsersInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    put:
+      summary: Updates existing user
+      description: >
+        Updates existing user which is provided by id of request user object.
+        The updated user can be returned by response.
+      tags:
+        - AdminUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+        required: true
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminUpdateUserInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    post:
+      summary: Creates a new User
+      description: >
+        Creates a new User. The newly created user can be returned if success to
+        create a new user.
+      tags:
+        - AdminUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminCreateUserInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    delete:
+      summary: Deletes a User
+      description: >
+        Deletes a User provided by id of response object. Return status of
+        deleting user operation.
+      tags:
+        - AdminUser
+      parameters:
+        - name: id
+          description: Id of user to update
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminDeleteUserInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /admin/user/resetpwd:
+    post:
+      summary: Make User Reset Password
+      description: >
+        Clear original password and send forgot password email to user. Then
+        user can change by using the link in email.
+      tags:
+        - AdminUser
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminResetUserPasswordInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /admin/company:
+    get:
+      summary: Gets a list of company by criteria
+      description: >
+        Gets a json objects of list of company by keyword, count per page, page
+        index by criteria.
+      tags:
+        - AdminCompany
+      parameters:
+        - name: keyword
+          description: Search keyword. Optional
+          in: query
+          schema:
+            type: string
+        - name: countPerPage
+          description: Number of objects to be returned. Optional. Defaults to 10
+          in: query
+          schema:
+            type: string
+        - name: pageIndex
+          description: 'Page index for searched list. Optional. Defaults : 1'
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Company'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminGetCompaniesInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    put:
+      summary: Updates a company object
+      description: |
+        Updates a request company objects by id.
+      tags:
+        - AdminCompany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateCompany'
+        required: true
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UpdateCompany'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminUpdateCompanyInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    post:
+      summary: Creates a company with related apis and related users
+      description: >
+        Creats a company object and save to database with request json objects.
+        Request object contains apis and users.
+      tags:
+        - AdminCompany
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Company'
+        required: true
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminCreateCompanyInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    delete:
+      summary: Deletes a company by id
+      description: >
+        Deletes a company by id of request object. Related apis and users can
+        not be deleted. Return status of deleting company.
+      tags:
+        - AdminCompany
+      parameters:
+        - name: id
+          in: query
+          description: Id of company to delete
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminDeleteCompanyInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  '/admin/company/{id}':
+    get:
+      summary: Gets a specific company object by id
+      description: |
+        Gets a specific company object by id of request object.
+      tags:
+        - AdminCompany
+      parameters:
+        - name: id
+          description: Id of company to get
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Company'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${adminGetCompanyByIdInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      parameters:
+        - name: id
+          description: Id of company to get
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/dashboard/debits:
+    get:
+      summary: Gets array objects of transaction information
+      description: |
+        Gets array objects of user transaction information due to day.
+      tags:
+        - UserDashboard
+      parameters:
+        - name: fromDate
+          description: From date to search transaction
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: toDate
+          description: To date to search transaction
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Debit'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetDashboardDebitsInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/dashboard/balance:
+    get:
+      summary: Gets a user balance for currency
+      description: |
+        Gets a user current balance for currency of every api.
+      tags:
+        - UserDashboard
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Balance'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetDashboardBalanceInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/dashboard/fees:
+    get:
+      summary: Gets a user total fees
+      description: |
+        Gets a user's total fees of total transactions.
+      tags:
+        - UserDashboard
+      parameters:
+        - name: days
+          description: Number of day to get total fee amount.
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Fee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetDashboardFeesInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/dashboard/kips:
+    get:
+      summary: Gets a user's last transaction state and seven days transaction state.
+      description: >
+        Gets a user's last success, pending and error transaction percent. Also
+        gets a user's last 7 days success, pending and error transaction
+        percent.
+      tags:
+        - UserDashboard
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Kips'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetDashboardKipsInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/dashboard/payees:
+    get:
+      summary: Gets a lastest top payees.
+      description: |
+        Gets a latest top payees with transaction amounts within last given days
+      tags:
+        - UserDashboard
+      parameters:
+        - name: count
+          description: Count to get list
+          in: query
+          required: true
+          schema:
+            type: integer
+        - name: days
+          description: Number of days to get top payees
+          in: query
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  list:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PayoutWithAmount'
+                  last:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PayoutWithAmount'
+                  days:
+                    type: integer
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetDashboardPayeesInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/payout:
+    post:
+      summary: Creates immediate or scheduled payouts
+      description: >
+        Creates payouts with options of request. The request should be array
+        json objects which is contain specific payee id, amount and reference
+        field.
+      tags:
+        - Payout
+      requestBody:
+        content:
+          application/json:
+            schema:              
+                $ref: '#/components/schemas/Payouts'
+
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payout'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userCreatePayoutInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/payee:
+    get:
+      summary: Gets list of payees with parameter
+      description: >
+        Gets list of payees with request paraments. List of payees will be
+        returned.
+      tags:
+        - Payee
+      parameters:
+        - name: keyword
+          description: Search keyword. Optional
+          in: query
+          schema:
+            type: string
+        - name: countPerPage
+          description: Number of objects to be returned. Optional. Defaults to 10
+          in: query
+          schema:
+            type: string
+        - name: pageIndex
+          description: 'Page index for searched list. Optional. Defaults : 1'
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetPayeesInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    put:
+      summary: Updates user payee information
+      description: |
+        Updates specific payee information and returns updated payee.
+      tags:
+        - Payee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/UpdatePayee'
+        required: true
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userUpdatePayeeInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    post:
+      summary: Creates new Payee
+      description: |
+        Creates new Payee with given object and return newly created payee.
+      tags:
+        - Payee
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Payee'
+        required: true
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Payee'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userCreatePayeeInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    delete:
+      summary: Deletes specific payee.
+      description: >
+        Deletes payee of specific id in request and return status of deleting
+        payee. At that time related payouts informations will not be deleted.
+      tags:
+        - Payee
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userDeletePayeeInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  '/user/payee/{id}':
+    get:
+      summary: Gets a specific payee with id
+      description: |
+        Gets a specific payee with id and return payee.
+      tags:
+        - Payee
+      parameters:
+        - name: id
+          description: Id of payee to get
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetPayeeByIdInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      parameters:
+        - name: id
+          description: Id of company to get
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/transaction:
+    get:
+      summary: Searches and gets user's transaction.
+      description: >
+        Searches user's transactions with requested parameters on elastic search
+        and returns list of transaction records
+      tags:
+        - UserTransaction
+      parameters:
+        - name: keyword
+          in: query
+          description: Search keyword. Optional
+          schema:
+            type: string
+        - name: countPerPage
+          description: Number of objects to be returned. Optional. Defaults to 10
+          in: query
+          schema:
+            type: string
+        - name: pageIndex
+          description: 'Page index for searched list. Optional. Defaults : 1'
+          in: query
+          schema:
+            type: string
+        - name: fromDate
+          description: From date to search transaction
+          in: query
+          schema:
+            type: string
+        - name: toDate
+          description: To date to search transaction
+          in: query
+          schema:
+            type: string
+        - name: method
+          description: >-
+            Type of transaction type. Default -1 or null. -1: All, 0: Sepa 1:
+            OCT RUSSIA, 2: CC USA, 3: CC EUROPA, 4: CC PAGAFLEX, 5: COMXBANK, 6:
+            MX PAGEFLEX 
+          in: query
+          schema:
+            type: integer
+        - name: currency
+          description: Currency to search currency. Defaul EUR.
+          in: query
+          schema:
+            type: string
+        - name: status
+          description: >-
+            Status for search filter. Default null. null: All, paid: Paid
+            Transactions, pending: Pending Transactions, discarded: Declined,
+            failed: Error
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Transaction'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetTransactionsInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user:
+    get:
+      summary: Gets user information
+      description: |
+        Gets user information and return with json object.
+      tags:
+        - User
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userGetUserInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /user/update:
+    post:
+      summary: Updates user information
+      description: |
+        Updates user's information and returns updated user object.
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${userUpdateUserInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+  /mfa:
+    get:
+      summary: Gets secret key and qr code image to enable MFA Status.
+      description: |
+        Return secret key and qr code image to enable MFA status.
+      tags:
+        - User
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  image:
+                    type: string
+                  code:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${mfaGetQrCodeInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    post:
+      summary: Enable MFA status
+      description: |
+        Check to validate code and enables user mfa status.
+      tags:
+        - User
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                userCode:
+                  type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  session:
+                    type: string
+                  status:
+                    type: string
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${mfaEnableInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    delete:
+      summary: Disable MFA status
+      description: |
+        Check to validate request user code and then disable user MFA status.
+      tags:
+        - User
+      parameters:
+        - name: code
+          description: User Otp code for validation
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+      security:
+        - Cognito: []
+        - api_key: []
+        - accessToken: []
+      x-amazon-apigateway-request-validator: 'Validate body, query string parameters, and headers'
+      x-amazon-apigateway-integration:
+        httpMethod: POST
+        credentials: '${executionCredentials}'
+        uri: '${mfaDisableInvokeArn}'
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        passthroughBehavior: when_no_match
+        contentHandling: CONVERT_TO_TEXT
+        type: aws_proxy
+    options:
+      responses:
+        '200':
+          description: 200 response
+          headers:
+            Access-Control-Allow-Origin:
+              schema:
+                type: string
+            Access-Control-Allow-Methods:
+              schema:
+                type: string
+            Access-Control-Allow-Headers:
+              schema:
+                type: string
+          content: {}
+      x-amazon-apigateway-integration:
+        responses:
+          default:
+            statusCode: '200'
+            responseParameters:
+              method.response.header.Access-Control-Allow-Methods: '''DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'''
+              method.response.header.Access-Control-Allow-Headers: >-
+                'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token'
+              method.response.header.Access-Control-Allow-Origin: '''*'''
+        requestTemplates:
+          application/json: '{"statusCode": 200}'
+        passthroughBehavior: when_no_match
+        type: mock
+components:
+  responses:
+    Forbidden:
+      description: Access Denied
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: Unauthorized
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    NotFound:
+      description: Not Found
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Failed:
+      description: Operation Failed
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+  schemas:
+    Error:
+      title: Error
+      type: object
+      properties:
+        statusCode:
+          type: integer
+        message:
+          type: string
+    Payee:
+      title: Payee
+      type: object
+      required:
+        - addressLine1
+        - affiliateId
+        - bankName
+        - bic
+        - countryCode
+        - currency
+        - email
+        - firstName
+        - iban
+        - languageCode
+        - lastName
+        - method
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+          minLength: 1
+        affiliateId:
+          type: string
+        method:
+          type: string
+        email:
+          type: string
+          pattern: '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+        bankName:
+          type: string
+        iban:
+          type: string
+          pattern: >-
+            ^([A-Z]{2}[ \-]?[0-9]{2})(?=(?:[ \-]?[A-Z0-9]){9,30}$)((?:[
+            \-]?[A-Z0-9]{3,5}){2,7})([ \-]?[A-Z0-9]{1,3})?$
+        bic:
+          type: string
+          pattern: '^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$'
+        currency:
+          type: string
+          pattern: >-
+            ^ADF|ADP|AED|AFA|AFN|ALL|AMD|ANG|AOA|AOK|AON|AOR|ARA|ARL|ARP|ARS|ATS|AUD|AWG|AZM|AZN|BAD|BAM|BBD|BDT|BEF|BGL|BGN|BHD|BIF|BMD|BND|BOB|BOP|BOV|BRB|BRC|BRE|BRL|BRN|BRR|BSD|BTN|BWP|BYB|BYN|BYR|BZD|CAD|CDF|CHE|CHF|CHW|CLE|CLF|CLP|CNY|COP|COU|CRC|CSD|CSK|CUC|CUP|CVE|CYP|CZK|DDM|DEM|DJF|DKK|DOP|DZD|ECS|ECV|EEK|EGP|ERN|ESA|ESB|ESP|ETB|EUR|FIM|FJD|FKP|FRF|GBP|GEL|GHC|GHS|GIP|GMD|GNE|GNF|GQE|GRD|GTQ|GWP|HKD|HNL|HRD|HRK|HTG|HUF|IDR|IEP|ILP|ILR|ILS|INR|IQD|IRR|ISJ|ISK|ITL|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LBP|LKR|LRD|LSL|LTL|LUF|LVL|LYD|MAD|MAF|MCF|MDL|MGA|MGF|MKD|MKN|MLV|MMK|MNT|MOP|MRO|MTL|MUR|MVQ|MVR|MWK|MXN|MXP|MXV|MYR|MZM|MZN|NAD|NGN|NIO|NLG|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PTE|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SIT|SKK|SLL|SML|SOS|SRD|SSP|STD|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UZS|VAL|VEF|VND|VUV|WST|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XBT|XCD|XDR|XFU|XOK|XPD|XPF|XPT|XSU|XTS|XUA|YER|ZAR|ZMW|ZWL$
+        addressLine1:
+          type: string
+        languageCode:
+          type: string
+          pattern: '^[a-z]{2}$'
+        countryCode:
+          type: string
+          pattern: '^[A-Z]{2}$'
+    UpdatePayee:
+      title: UpdatePayee
+      type: object
+      required:
+        - id
+        - addressLine
+        - affiliateId
+        - bankName
+        - bic
+        - companyId
+        - countryCode
+        - currency
+        - email
+        - firstName
+        - iban
+        - languageCode
+        - lastName
+        - method
+      properties:
+        id:
+          type: string          
+        firstName:
+          type: string
+        lastName:
+          type: string
+          minLength: 1
+        affiliateId:
+          type: string
+        method:
+          type: integer
+        email:
+          type: string
+          pattern: '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+        bankName:
+          type: string
+        iban:
+          type: string
+          pattern: >-
+            ^([A-Z]{2}[ \-]?[0-9]{2})(?=(?:[ \-]?[A-Z0-9]){9,30}$)((?:[
+            \-]?[A-Z0-9]{3,5}){2,7})([ \-]?[A-Z0-9]{1,3})?$
+        bic:
+          type: string
+          pattern: '^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$'
+        currency:
+          type: string
+          pattern: >-
+            ^ADF|ADP|AED|AFA|AFN|ALL|AMD|ANG|AOA|AOK|AON|AOR|ARA|ARL|ARP|ARS|ATS|AUD|AWG|AZM|AZN|BAD|BAM|BBD|BDT|BEF|BGL|BGN|BHD|BIF|BMD|BND|BOB|BOP|BOV|BRB|BRC|BRE|BRL|BRN|BRR|BSD|BTN|BWP|BYB|BYN|BYR|BZD|CAD|CDF|CHE|CHF|CHW|CLE|CLF|CLP|CNY|COP|COU|CRC|CSD|CSK|CUC|CUP|CVE|CYP|CZK|DDM|DEM|DJF|DKK|DOP|DZD|ECS|ECV|EEK|EGP|ERN|ESA|ESB|ESP|ETB|EUR|FIM|FJD|FKP|FRF|GBP|GEL|GHC|GHS|GIP|GMD|GNE|GNF|GQE|GRD|GTQ|GWP|HKD|HNL|HRD|HRK|HTG|HUF|IDR|IEP|ILP|ILR|ILS|INR|IQD|IRR|ISJ|ISK|ITL|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LBP|LKR|LRD|LSL|LTL|LUF|LVL|LYD|MAD|MAF|MCF|MDL|MGA|MGF|MKD|MKN|MLV|MMK|MNT|MOP|MRO|MTL|MUR|MVQ|MVR|MWK|MXN|MXP|MXV|MYR|MZM|MZN|NAD|NGN|NIO|NLG|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PTE|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SIT|SKK|SLL|SML|SOS|SRD|SSP|STD|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UZS|VAL|VEF|VND|VUV|WST|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XBT|XCD|XDR|XFU|XOK|XPD|XPF|XPT|XSU|XTS|XUA|YER|ZAR|ZMW|ZWL$
+        addressLine:
+          type: string
+        languageCode:
+          type: string
+          pattern: '^[a-z]{2}$'
+        countryCode:
+          type: string
+          pattern: '^[A-Z]{2}$'
+        companyId:
+          type: integer
+    Payout:
+      title: Payout
+      type: object
+      required:
+        - amount
+        - payeeId
+        - reference        
+      properties:
+        id:
+          type: string
+        reference:
+          type: string
+        amount:
+          type: string
+          pattern: '^[1-9][0-9]*$'
+        status:
+          type: integer
+        payeeId:
+          type: integer
+    Transaction:
+      title: Transaction
+      required:
+        - company
+        - beneficiary
+        - method
+        - number
+        - amount
+        - fee
+        - currency
+        - status
+      type: object
+      properties:
+        id:
+          type: string
+        company:
+          type: string
+        beneficiary:
+          type: string
+        method:
+          type: integer
+        number:
+          type: string
+        amount:
+          type: integer
+        fee:
+          type: integer
+        currency:
+          type: string
+          pattern: >-
+            ^ADF|ADP|AED|AFA|AFN|ALL|AMD|ANG|AOA|AOK|AON|AOR|ARA|ARL|ARP|ARS|ATS|AUD|AWG|AZM|AZN|BAD|BAM|BBD|BDT|BEF|BGL|BGN|BHD|BIF|BMD|BND|BOB|BOP|BOV|BRB|BRC|BRE|BRL|BRN|BRR|BSD|BTN|BWP|BYB|BYN|BYR|BZD|CAD|CDF|CHE|CHF|CHW|CLE|CLF|CLP|CNY|COP|COU|CRC|CSD|CSK|CUC|CUP|CVE|CYP|CZK|DDM|DEM|DJF|DKK|DOP|DZD|ECS|ECV|EEK|EGP|ERN|ESA|ESB|ESP|ETB|EUR|FIM|FJD|FKP|FRF|GBP|GEL|GHC|GHS|GIP|GMD|GNE|GNF|GQE|GRD|GTQ|GWP|HKD|HNL|HRD|HRK|HTG|HUF|IDR|IEP|ILP|ILR|ILS|INR|IQD|IRR|ISJ|ISK|ITL|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LBP|LKR|LRD|LSL|LTL|LUF|LVL|LYD|MAD|MAF|MCF|MDL|MGA|MGF|MKD|MKN|MLV|MMK|MNT|MOP|MRO|MTL|MUR|MVQ|MVR|MWK|MXN|MXP|MXV|MYR|MZM|MZN|NAD|NGN|NIO|NLG|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PTE|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SIT|SKK|SLL|SML|SOS|SRD|SSP|STD|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UZS|VAL|VEF|VND|VUV|WST|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XBT|XCD|XDR|XFU|XOK|XPD|XPF|XPT|XSU|XTS|XUA|YER|ZAR|ZMW|ZWL$
+        status:
+          type: integer
+    Company:
+      type: object
+      required:
+        - accountNo
+        - bank
+        - bic
+        - email
+        - firstName
+        - iban
+        - lastName
+        - routingNo
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          pattern: '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+        bank:
+          type: string
+        iban:
+          type: string
+          pattern: >-
+            ^([A-Z]{2}[ \-]?[0-9]{2})(?=(?:[ \-]?[A-Z0-9]){9,30}$)((?:[
+            \-]?[A-Z0-9]{3,5}){2,7})([ \-]?[A-Z0-9]{1,3})?$
+        bic:
+          type: string
+          pattern: '^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$'
+        accountNo:
+          type: string
+        routingNo:
+          type: string
+        apis:
+          type: array
+          items:
+            $ref: '#/components/schemas/Api'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      title: Company
+    UpdateCompany:
+      type: object
+      required:
+        - id
+        - accountNo
+        - bank
+        - bic
+        - email
+        - firstName
+        - iban
+        - lastName
+        - routingNo
+      properties:
+        id:
+          type: integer          
+        name:
+          type: string
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          pattern: '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+        bank:
+          type: string
+        iban:
+          type: string
+          pattern: >-
+            ^([A-Z]{2}[ \-]?[0-9]{2})(?=(?:[ \-]?[A-Z0-9]){9,30}$)((?:[
+            \-]?[A-Z0-9]{3,5}){2,7})([ \-]?[A-Z0-9]{1,3})?$
+        bic:
+          type: string
+          pattern: '^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$'
+        accountNo:
+          type: string
+        routingNo:
+          type: string
+        apis:
+          type: array
+          items:
+            $ref: '#/components/schemas/Api'
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/User'
+      title: UpdateCompany
+    User:
+      title: User
+      required:
+        - email
+        - firstName
+        - lastName
+      type: object
+      properties:
+        id:
+          type: string
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          pattern: '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+        timezone:
+          type: string
+        timeformat:
+          type: string
+          enum:
+            - '24'
+            - '12'
+        dateformat:
+          type: string
+          enum:
+            - mdy
+            - dmy
+            - ymd
+        xyformat:
+          type: string
+          enum:
+            - '1'
+            - '2'
+        companyId:
+          type: integer
+        status:
+          type: integer
+    UpdateUser:
+      title: UpdateUser
+      required:
+        - id
+        - email
+        - firstName
+        - lastName
+      type: object
+      properties:
+        id:
+          type: string          
+        firstName:
+          type: string
+          minLength: 1
+        lastName:
+          type: string
+          minLength: 1
+        email:
+          type: string
+          pattern: '^[a-zA-Z0-9.!#$%&''*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$'
+        timezone:
+          type: string
+        timeformat:
+          type: string
+          enum:
+            - '24'
+            - '12'
+        dateformat:
+          type: string
+          enum:
+            - mdy
+            - dmy
+            - ymd
+        xyformat:
+          type: string
+          enum:
+            - '1'
+            - '2'   
+        companyId:
+          type: integer
+        status:
+          type: integer
+    Api:
+      title: Api
+      required:
+        - amount
+        - apiPassword
+        - apitenant
+        - apiType
+        - apiUsername        
+        - connectorId
+        - feeType
+        - merchantId
+      type: object
+      properties:
+        id:
+          type: string
+        apiType:
+          type: string
+        apitenant:
+          type: string
+        apiUsername:
+          type: string
+        apiPassword:
+          type: string
+        merchantId:
+          type: string
+        connectorId:
+          type: string
+        feeType:
+          type: string
+        amount:
+          type: string
+        companyId:
+          type: string
+    Payouts:
+      title: Payouts
+      type: array
+      minItems: 1
+      items:
+        $ref: '#/components/schemas/Payout'
+    Fee:
+      title: Fee
+      type: object
+      properties:
+        method:
+          type: integer
+        transactions:
+          type: integer
+        amount:
+          type: integer
+        currency:
+          type: integer
+          pattern: >-
+            ^ADF|ADP|AED|AFA|AFN|ALL|AMD|ANG|AOA|AOK|AON|AOR|ARA|ARL|ARP|ARS|ATS|AUD|AWG|AZM|AZN|BAD|BAM|BBD|BDT|BEF|BGL|BGN|BHD|BIF|BMD|BND|BOB|BOP|BOV|BRB|BRC|BRE|BRL|BRN|BRR|BSD|BTN|BWP|BYB|BYN|BYR|BZD|CAD|CDF|CHE|CHF|CHW|CLE|CLF|CLP|CNY|COP|COU|CRC|CSD|CSK|CUC|CUP|CVE|CYP|CZK|DDM|DEM|DJF|DKK|DOP|DZD|ECS|ECV|EEK|EGP|ERN|ESA|ESB|ESP|ETB|EUR|FIM|FJD|FKP|FRF|GBP|GEL|GHC|GHS|GIP|GMD|GNE|GNF|GQE|GRD|GTQ|GWP|HKD|HNL|HRD|HRK|HTG|HUF|IDR|IEP|ILP|ILR|ILS|INR|IQD|IRR|ISJ|ISK|ITL|JMD|JOD|JPY|KES|KGS|KHR|KMF|KPW|KRW|KWD|KYD|KZT|LAK|LBP|LKR|LBP|LKR|LRD|LSL|LTL|LUF|LVL|LYD|MAD|MAF|MCF|MDL|MGA|MGF|MKD|MKN|MLV|MMK|MNT|MOP|MRO|MTL|MUR|MVQ|MVR|MWK|MXN|MXP|MXV|MYR|MZM|MZN|NAD|NGN|NIO|NLG|NOK|NPR|NZD|OMR|PAB|PEN|PGK|PHP|PKR|PLN|PTE|PYG|QAR|RON|RSD|RUB|RWF|SAR|SBD|SCR|SDG|SEK|SGD|SHP|SIT|SKK|SLL|SML|SOS|SRD|SSP|STD|SVC|SYP|SZL|THB|TJS|TMT|TND|TOP|TRY|TTD|TWD|TZS|UAH|UGX|USD|USN|UYI|UYU|UZS|VAL|VEF|VND|VUV|WST|XAF|XAG|XAU|XBA|XBB|XBC|XBD|XBT|XCD|XDR|XFU|XOK|XPD|XPF|XPT|XSU|XTS|XUA|YER|ZAR|ZMW|ZWL$
+    PayoutWithAmount:
+      title: CalculatedPayee
+      type: object
+      properties:
+        id:
+          type: string
+        createdAt:
+          type: string
+        status:
+          type: string
+        payeeId:
+          type: integer
+        total_amount:
+          type: integer
+    Debit:
+      title: Debit
+      type: object
+      properties:
+        amount:
+          type: integer
+        currency:
+          type: string
+        state:
+          type: string
+        total:
+          type: integer
+        createdOn:
+          type: string
+    Balance:
+      title: Balance
+      type: object
+      properties:
+        amount:
+          type: integer
+        currency:
+          type: string
+        type:
+          type: string
+    Kips:
+      title: Kips
+      type: object
+      properties:
+        lastTransactionSuccess:
+          type: integer
+        lastTransactionPending:
+          type: integer
+        lastTransactionError:
+          type: integer
+        lastSevenDaysSuccess:
+          type: integer
+        lastSevenDaysPending:
+          type: integer
+        lastSevenDaysError:
+          type: integer
+  securitySchemes:
+    accessToken:
+      type: apiKey
+      name: X-Amz-Security-Token
+      in: header
+    api_key:
+      type: apiKey
+      name: x-api-key
+      in: header
+    Cognito:
+      type: apiKey
+      name: Authorization
+      in: header
+      x-amazon-apigateway-authtype: cognito_user_pools
+      x-amazon-apigateway-authorizer:
+        providerARNs:
+          - '${cognitoUserPoolArn}'
+        type: cognito_user_pools
+x-amazon-apigateway-gateway-responses:
+  EXPIRED_TOKEN:
+    statusCode: 403
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Headers: '''*'''
+    responseTemplates:
+      application/json: '{"message":$context.error.messageString}'
+  UNAUTHORIZED:
+    statusCode: 401
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Headers: '''*'''
+    responseTemplates:
+      application/json: '{"message":$context.error.messageString}'
+  DEFAULT_4XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Headers: '''*'''
+    responseTemplates:
+      application/json: '{"message":$context.error.messageString}'
+  DEFAULT_5XX:
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Headers: '''*'''
+    responseTemplates:
+      application/json: '{"message":$context.error.messageString}'
+  BAD_REQUEST_BODY:
+    statusCode: 400
+    responseParameters:
+      gatewayresponse.header.Access-Control-Allow-Methods: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Origin: '''*'''
+      gatewayresponse.header.Access-Control-Allow-Headers: '''*'''
+    responseTemplates:
+      application/json: '{"message":$context.error.validationErrorString}'
+x-amazon-apigateway-request-validators:
+  'Validate body, query string parameters, and headers':
+    validateRequestParameters: true
+    validateRequestBody: true

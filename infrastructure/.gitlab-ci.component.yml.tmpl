@@ -1,0 +1,13 @@
+Deploy %COMPONENT% to %ENVIRONMENT%:
+  trigger:
+    include: .gitlab-ci.terraform.yml
+    strategy: depend
+  variables:
+    COMPONENT: "%COMPONENT%"
+    ENVIRONMENT: "%ENVIRONMENT%"
+  only:
+    refs:
+      - master
+    changes:
+      - "%ENVIRONMENT%/%COMPONENT%/**/*"
+

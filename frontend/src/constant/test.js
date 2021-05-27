@@ -1,0 +1,1 @@
+export const TEST_OTP_CODE = "12345";

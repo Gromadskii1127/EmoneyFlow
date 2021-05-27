@@ -1,0 +1,46 @@
+.emoney-switch{
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;  
+  height: 21px !important;
+  width: 47px !important;
+
+  & > .MuiSwitch-switchBase {
+    padding: 0 !important; 
+    transform: translate(2px, 2px) !important;
+  }
+
+  .MuiSwitch-thumb {
+    width: 17px !important;
+    height: 17px !important;
+  }
+
+  & > .Mui-checked {
+    color: white !important;
+    transform: translate(27px, 2px) !important;
+
+    & + .MuiSwitch-track{
+      background-color: $color-228fee !important;   
+      opacity: 1 !important;   
+    }
+  }
+}
+
+.MuiFormControlLabel-root .emoney-switch {
+  margin: 12px !important;  
+}
+
+.emoney-switch-track {  
+  width: 47px !important;
+  min-width: 42px !important;
+  height: 21px !important;
+  border-radius: 40px !important;  
+  padding: 0 !important;  
+}
+
+.emoney-switch-checked-icon {
+  color: $switch-checked-icon-color;
+  transform: scale(0.8);
+  width: 18px !important;
+  height: 18px !important;
+}

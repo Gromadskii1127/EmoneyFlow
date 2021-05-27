@@ -1,0 +1,65 @@
+@use '../abstracts' as *;
+
+$font-family: 'Helvetica Neue', sans-serif !default;
+$font-size: 12px !default;
+
+* {
+  // Default font.
+  font-family: $font-family;
+}
+
+body,
+p, .p {
+  font-size: $font-size;
+}
+
+.h1 {
+  font-size: 48px !important;
+  line-height: 56px !important;
+}
+
+.h2 {
+  font-size: 30px !important;
+  line-height: 35px !important;
+}
+
+.h3 {
+  font-size: 20px !important;
+  line-height: 24px !important;
+}
+
+.normal-font-size {
+  font-size: 16px !important;
+  line-height: 18px !important;
+}
+
+.small-font-size {
+  font-size: 12px !important;
+  line-height: 13px !important;
+}
+
+.small-title {
+  font-size: 14px !important;
+  line-height: 21px !important;
+}
+
+.font-light {
+  font-weight: 300 !important;
+}
+
+.font-regular {
+  font-weight: 400 !important;
+}
+
+.font-bold {
+  font-weight: 500 !important;
+}
+
+.icon-font {
+  font-size: 10px !important;
+}
+
+.vertical-text {
+  writing-mode: vertical-lr;
+  transform: scale(-1, -1);
+}

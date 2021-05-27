@@ -1,0 +1,55 @@
+image: registry.gitlab.com/gitlab-org/terraform-images/stable:latest
+
+variables:
+  TF_ROOT: ${CI_PROJECT_DIR}/$ENVIRONMENT/$COMPONENT
+  TF_ADDRESS: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state/$ENVIRONMENT-$COMPONENT
+  TF_VAR_remote_state_base_path: ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/terraform/state
+  TF_VAR_remote_state_username: gitlab-ci-token
+  TF_VAR_remote_state_access_token: ${CI_JOB_TOKEN}
+  TF_VAR_environment: ${ENVIRONMENT}
+
+cache:
+  key: $ENVIRONMENT-$COMPONENT
+  paths:
+    - ${TF_ROOT}/.terraform
+    - ${TF_ROOT}/.terraform.lock.hcl
+
+before_script:
+  - cd ${TF_ROOT}
+  - gitlab-terraform init
+
+stages:
+  - validate
+  - build
+  - deploy
+
+validate:
+  stage: validate
+  script:
+    - gitlab-terraform validate
+
+plan:
+  stage: build
+  environment:
+    name: $ENVIRONMENT/$COMPONENT
+    action: prepare
+  script:
+    - gitlab-terraform plan
+    - gitlab-terraform plan-json
+  artifacts:
+    name: plan
+    paths:
+      - ${TF_ROOT}/plan.cache
+    reports:
+      terraform: ${TF_ROOT}/plan.json
+
+apply:
+  stage: deploy
+  environment:
+    name: $ENVIRONMENT/$COMPONENT
+  script:
+    - gitlab-terraform apply
+  dependencies:
+    - plan
+  only:
+    - master

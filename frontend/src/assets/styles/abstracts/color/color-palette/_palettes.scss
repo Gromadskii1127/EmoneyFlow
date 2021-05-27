@@ -1,0 +1,262 @@
+// Default core color palettes.
+// Note: load the file via @use:
+//   @use 'color-palette';
+//   then access to variable is by <namespace>.<variable>, e.g.: color-palette.$red.
+
+$primary: (
+  name: 'palette-primary',
+  default: 500,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #E5F2F9,
+  100: #C0DDF2,
+  200: #9BC9EA,
+  300: #7AB3E0,
+  400: #64A4DA,
+  500: #5395D4,
+  600: #4B88C7,
+  700: #4276B5,
+  800: #3A66A3,
+  900: #2D4983,
+  contrast: (50: dark, 100: dark, 200: dark, 300: dark, 400: dark, 500: light, 600: light, 700: light, 800: light, 900: light)
+) !default;
+
+
+$secondary: (
+  name: 'palette-secondary',
+  default: 500,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #E0F2F1,
+  100: #B2DEDC,
+  200: #7FC9C6,
+  300: #4CB4AE,
+  400: #25A39C,
+  500: #00938A,
+  600: #00867D,
+  700: #01766D,
+  800: #03665D,
+  900: #044A41,
+  contrast: (50: dark, 100: dark, 200: dark, 300: dark, 400: dark, 500: light, 600: light, 700: light, 800: light, 900: light)
+) !default;
+
+$tertiary: (
+  name: 'palette-tertiary',
+  default: 600,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #E6F6EC,
+  100: #C3E7D0,
+  200: #9DD8B3,
+  300: #73CA95,
+  400: #52BE7F,
+  500: #2DB268,
+  600: #25A35E,
+  700: #1B9152,
+  800: #147F46,
+  900: #056032,
+  contrast: (50: dark, 100: dark, 200: dark, 300: dark, 400: dark, 500: dark, 600: light, 700: light, 800: light, 900: light)
+) !default;
+
+$gray: (
+  name: 'palette-gray',
+  default: 800,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #F7F7F7,
+  100: #EEEEEE,
+  200: #E3E3E3,
+  300: #D1D1D1,
+  400: #ACACAC,
+  500: #8B8B8B,
+  600: #646464,
+  700: #515151,
+  800: #333333,
+  900: #131313,
+  contrast: (
+    50: dark,
+    100: dark,
+    200: dark,
+    300: dark,
+    400: dark,
+    500: light,
+    600: light,
+    700: light,
+    800: light,
+    900: light,
+  )
+) !default;
+
+$red: (
+  name: 'palette-red',
+  default: 700,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #FFEAEC,
+  100: #FFCACD,
+  200: #FC958F,
+  300: #F56963,
+  400: #FF4339,
+  500: #FF2B10,
+  600: #F51A14,
+  700: #E3000F,
+  800: #D60004,
+  900: #C90000,
+  contrast: (
+    50: dark,
+    100: dark,
+    200: dark,
+    300: dark,
+    400: light,
+    500: light,
+    600: light,
+    700: light,
+    800: light,
+    900: light,
+  )
+) !default;
+
+$orange: (
+  name: 'palette-orange',
+  default: 400,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #FFF3DE,
+  100: #FFDFAE,
+  200: #FFCB78,
+  300: #FFB53F,
+  400: #FFA500,
+  500: #FF9500,
+  600: #FC8900,
+  700: #F77800,
+  800: #F26700,
+  900: #E94A00,
+  contrast: (
+    50: dark,
+    100: dark,
+    200: dark,
+    300: dark,
+    400: dark,
+    500: dark,
+    600: dark,
+    700: dark,
+    800: light,
+    900: light,
+  )
+) !default;
+
+$green: (
+  name: 'palette-green',
+  default: 500,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #F2F8E7,
+  100: #DDEEC3,
+  200: #C7E39C,
+  300: #AFD773,
+  400: #9DCF51,
+  500: #8BC62D,
+  600: #7BB625,
+  700: #66A21A,
+  800: #518E0F,
+  900: #286D00,
+  contrast: (
+    50: dark,
+    100: dark,
+    200: dark,
+    300: dark,
+    400: dark,
+    500: dark,
+    600: dark,
+    700: light,
+    800: light,
+    900: light,
+  )
+) !default;
+
+$blue: (
+  name: 'palette-blue',
+  default: 900,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #E3F1FB,
+  100: #BADBF7,
+  200: #8FC5F2,
+  300: #64AFEC,
+  400: #459EE9,
+  500: #298EE5,
+  600: #2581D8,
+  700: #1F6FC5,
+  800: #1A5EB3,
+  900: #114194,
+  contrast: (
+    50: dark,
+    100: dark,
+    200: dark,
+    300: dark,
+    400: light,
+    500: light,
+    600: light,
+    700: light,
+    800: light,
+    900: light,
+  )
+) !default;
+
+$cyan: (
+  name: 'palette-cyan',
+  default: 300,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #E0FAFF,
+  100: #B0F3FF,
+  200: #76ECFF,
+  300: #10E3FF,
+  400: #00DCFD,
+  500: #00D4FA,
+  600: #00C3E6,
+  700: #00AEC9,
+  800: #0099B0,
+  900: #007580,
+  contrast: (
+    50: dark,
+    100: dark,
+    200: dark,
+    300: dark,
+    400: dark,
+    500: dark,
+    600: dark,
+    700: dark,
+    800: light,
+    900: light,
+  )
+) !default;
+
+$mint: (
+  name: 'palette-mint',
+  default: 100,
+  light: white,
+  dark: rgba(black, 0.87),
+  50: #EBF6EA,
+  100: #D0E8CC,
+  200: #B2DAAB,
+  300: #93CD88,
+  400: #7CC26E,
+  500: #67B754,
+  600: #5CA74B,
+  700: #509541,
+  800: #458437,
+  900: #316525,
+  contrast: (
+    50: dark,
+    100: dark,
+    200: dark,
+    300: dark,
+    400: dark,
+    500: dark,
+    600: dark,
+    700: light,
+    800: light,
+    900: light,
+  )
+) !default;

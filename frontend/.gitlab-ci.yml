@@ -1,0 +1,50 @@
+stages:
+  - build
+  - deploy
+
+.deploy:
+  stage: deploy
+  image: "python:3.7"
+  before_script:
+    - set -u
+    - apt-get update -y
+    - apt-get install -y zip jq
+    - pip install awscli
+    - eval $(aws sts assume-role --role-arn $S3_ROLE_ARN --role-session-name "GitLab-CI-Session" | jq -r '.Credentials | "export AWS_ACCESS_KEY_ID=\(.AccessKeyId)\nexport AWS_SECRET_ACCESS_KEY=\(.SecretAccessKey)\nexport AWS_SESSION_TOKEN=\(.SessionToken)\n"')
+
+Build Frontend:
+  stage: build
+  image: node
+  variables:
+    NODE_OPTIONS: "--max-old-space-size=2048"
+    YARN_CACHE_FOLDER: "$CI_PROJECT_DIR/.yarn"
+  before_script:
+    - yarn install
+  script:
+    - yarn build
+  cache:
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - $YARN_CACHE_FOLDER
+  artifacts:
+    paths:
+      - build/
+
+Deploy Frontend Staging:
+  extends: .deploy
+  environment:
+    name: staging
+  script:
+    - aws s3 cp build s3://$S3_BUCKET_NAME/ --recursive
+  only:
+    - develop
+
+Deploy Frontend Production:
+  extends: .deploy
+  environment:
+    name: production
+  script:
+    - aws s3 cp build s3://$S3_BUCKET_NAME/ --recursive
+  only:
+    - master
+  

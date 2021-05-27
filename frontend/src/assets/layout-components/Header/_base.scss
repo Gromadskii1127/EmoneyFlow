@@ -1,0 +1,47 @@
+//  Core
+
+.app-header {
+  width: 100%;
+  left: 0;
+  top: 0;
+  height: $header-height;
+  padding: 0 $layout-spacer;
+  align-items: center;
+  display: flex;
+  position: fixed;
+  justify-content: space-between;
+  z-index: 11;
+  transition: all 0.5s cubic-bezier(0.685, 0.0473, 0.346, 1);
+  flex-direction: row !important;
+}
+
+.app-header.header-nav-wrapper {
+  .nav-logo {
+    a {
+      i {
+        @include border-radius(100%);
+      }
+    }
+  }
+
+  .header-nav-logo {
+    flex: auto;
+  }
+
+  .header-nav-menu {
+    flex: auto;
+  }
+}
+
+.header-user-image {
+  width: 42px;
+  height: 42px;
+  border-radius: 100%;
+  background-color: $color-57B8FF !important;
+  color: $white;
+  text-transform: uppercase;
+}
+
+.header-user-name {
+  color: $white;
+}

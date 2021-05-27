@@ -1,0 +1,73 @@
+.emoney-table-head {
+  background-color: $emoneytable-head-color;
+}
+
+.emoney-grid-container {
+  table {
+    &>thead {
+      background-color: $emoneytable-head-color;
+      //height: 52px;
+    }
+
+    ;
+
+    &>thead>tr>th {
+      font-weight: 600 !important; // semibold
+      font-size: 12px;
+      letter-spacing: 0.87px;
+    }
+
+    &>tbody>tr>td {
+      font-size: 14px;
+      color: $emoneytable-cell-color;
+      letter-spacing: 0.1px;
+    }
+  }
+}
+
+.emoney-group-row-content {
+  font-size: 12px;
+  font-weight: 600 !important;
+  color: #131523;
+  letter-spacing: 0.87px;
+}
+
+tr[class*="TableSelectRow-selected-"] {
+  &>td:nth-child(1) {
+    border-left: 2px solid $emoneytable-select-cell-color;
+  }
+}
+tr:hover {
+  background-color: rgba(244, 244, 244, 1);
+  cursor: pointer;
+}
+
+.emoney-group-row {
+  min-height: 62px;
+  height: 62px
+}
+
+.emoney-header-row {
+  max-height: 52px;
+  height: 52px;
+
+}
+
+.emoney-group-row-cell {
+  padding-left: 52px !important;
+  vertical-align: bottom !important;
+  border-bottom: 2px solid #707070 !important;
+}
+
+.emoney-table-td {
+  height: 100%;
+  padding: 0px !important;
+  padding-right: 20px !important;
+}
+
+.emoney-table-save-button {
+  width: 90px;
+  height: 30px;
+  color: white !important;
+  background-color: $color-228fee !important;
+}

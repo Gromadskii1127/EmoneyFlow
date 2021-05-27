@@ -1,0 +1,120 @@
+.lw-container {
+  position: relative;
+
+  & > .ln-container {
+    width: 100%;
+    height: 30px;
+    position: relative;
+
+    & > .main-ln {
+      position: absolute;
+      top: 50%;
+      left: 0%;
+      width: 100%;
+      border: 1px solid #979797;
+      transform: translateY(-1px);
+    }
+
+    & > .color-ln {
+      position: absolute;
+      top: 50%;
+      border: 2px solid #979797;
+      transform: translateY(-2px);
+
+      &.color-dark {
+        border-color: #1B1464;
+      }
+      &.color-green {
+        border-color: #00A99D;
+      }
+    }
+
+    &>.ln-split {
+      position: absolute;
+      top: 10%;
+      height: 80%;
+      border: 1px solid #979797;
+      transform: translateX(-1px);
+    }
+
+    &>.circle-item {
+      width: 20px;
+      height: 20px;
+      border-radius: 50%;
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%) translateX(-50%);
+
+      &.color-red {
+        background: #F27E7C;
+        opacity: 0.78;
+      }
+
+      &.color-yellow {
+        background: #F7B500;
+        opacity: 1;
+      }
+
+      &.color-blue {
+        background: #6ECDB8;
+        opacity: 0.78;
+      }
+    }
+  }
+
+  & > .ln-label-container {
+    width: 100%;
+    position: relative;
+    height: 50px;
+
+    & > .ln-label {
+      transform: translateX(-50%);
+      position: absolute;
+    }
+
+    & > .label {
+      position: absolute;
+      transform: translateX(-10px);
+    }
+  }
+
+  & > .ln-color-section {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+
+    & > div {
+      display: flex;
+      flex-direction: column;
+
+      & > .ln-color-item {
+        height: 30px;
+      }
+
+      & > .title {
+        flex: 1;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+    }
+    
+  }
+
+  & > .ln-color-layer-section { 
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    z-index: -1;
+
+    & > .ln-color-layer-section-item {
+      height: 100%;
+      opacity: 0.3;
+      border: 1px solid $white;
+    }
+  }
+}

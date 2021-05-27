@@ -1,0 +1,149 @@
+// Icons for eMoneyFlow (short emicon).
+@use '../../../abstracts' as *;
+@use 'variables' as icon;
+
+$font-path: '#{$font-url}emoneyflow';
+$font-family: 'emoneyflow';
+
+@font-face {
+  font-family: 'emoneyflow';
+  font-style: normal;
+  font-weight: 400;
+  font-display: block;
+  src: local('emoneyflow'),
+    // don't use for modern browser
+    //url('#{$font-path}/emoneyflow.eot?#iefix') format('embedded-opentype'), /* IE6-IE8 */
+  url('#{$font-path}/emoneyflow.woff') format('woff'), /* Modern Browsers */
+  url('#{$font-path}/emoneyflow.ttf') format('truetype'), /* Safari, Android, iOS */
+  url('#{$font-path}/emoneyflow.svg#emoneyflow') format('svg'); /* Legacy iOS */
+}
+
+/*@mixin emicon {
+  font-family: $font-family;
+  font-style: normal;
+  letter-spacing: normal;
+}*/
+
+// Default `.icon` class is material design.
+.emicon {
+  @include icon($font-family);
+  //@include emicon();
+}
+
+.emicon-before::before {
+  content: attr(data-icon-before);
+  @include icon($font-family);
+  //@include emicon();
+}
+
+.emicon-after::after {
+  content: attr(data-icon-after);
+  @include icon($font-family);
+  //@include emicon();
+}
+
+[class^="emicon-"], [class*=" emicon-"] {
+  @include icon($font-family);
+  line-height: 1;
+}
+
+.emicon-filter {
+  &:before {
+    content: icon.$emicon-filter;
+  }
+}
+.emicon-menue {
+  &:before {
+    content: icon.$emicon-menue;
+  }
+}
+.emicon-home {
+  &:before {
+    content: icon.$emicon-home;
+  }
+}
+.emicon-company {
+  &:before {
+    content: icon.$emicon-company;
+  }
+}
+.emicon-edit {
+  &:before {
+    content: icon.$emicon-edit;
+  }
+}
+.emicon-lock {
+  &:before {
+    content: icon.$emicon-lock;
+  }
+}
+.emicon-rest-password {
+  &:before {
+    content: icon.$emicon-rest-password;
+  }
+}
+.emicon-delete {
+  &:before {
+    content: icon.$emicon-delete;
+  }
+}
+.emicon-hdd-up {
+  &:before {
+    content: icon.$emicon-hdd-up;
+  }
+}
+.emicon-copy {
+  &:before {
+    content: icon.$emicon-copy;
+  }
+}
+.emicon-user {
+  &:before {
+    content: icon.$emicon-user;
+  }
+}
+.emicon-user-plus {
+  &:before {
+    content: icon.$emicon-user-plus;
+  }
+}
+.emicon-user-lock {
+  &:before {
+    content: icon.$emicon-user-lock;
+  }
+}
+.emicon-payees {
+  &:before {
+    content: icon.$emicon-payees;
+  }
+}
+.emicon-search {
+  &:before {
+    content: icon.$emicon-search;
+  }
+}
+.emicon-list3 {
+  &:before {
+    content: icon.$emicon-list3;
+  }
+}
+.emicon-overview {
+  &:before {
+    content: icon.$emicon-overview;
+  }
+}
+.emicon-payouts {
+  &:before {
+    content: icon.$emicon-payouts;
+  }
+}
+.emicon-warning {
+  &:before {
+    content: icon.$emicon-warning;
+  }
+}
+.emicon-checkmark-circle {
+  &:before {
+    content: icon.$emicon-checkmark-circle;
+  }
+}

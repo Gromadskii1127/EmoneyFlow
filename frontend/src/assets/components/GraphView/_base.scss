@@ -1,0 +1,15 @@
+.gv-container {
+  position: relative;
+  width: 80%;
+  margin: auto;
+
+  & .circle-item {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(-50%);
+    z-index: 103;
+  }
+}

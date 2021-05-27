@@ -1,0 +1,32 @@
+.autocomplete-height-s {
+  & .MuiAutocomplete-inputRoot {
+    padding-top: 3px !important;
+    padding-bottom: 3px !important;
+  }
+
+  & .MuiInputLabel-outlined {
+    transform: translate(14px, 14px) scale(1) !important;
+
+    &.MuiInputLabel-shrink {
+      transform: translate(14px, -6px) scale(0.75) !important;
+    }
+  }
+}
+
+
+.custom-option {
+  padding: 0 !important;
+}
+
+.custom-popper {
+  padding-bottom: 0 !important;
+}
+
+.custom-listbox {
+  padding: 0px !important;
+  overflow-x: hidden !important;
+}
+
+.custom-auto-complete {
+  
+}

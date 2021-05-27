@@ -1,0 +1,37 @@
+stages:
+  - bootstrap
+  - trigger
+
+bootstrap:
+  stage: bootstrap
+  image: alpine
+  script:
+    - bootstrap
+  artifacts:
+    paths:
+      - ".gitlab-ci.services.yml"
+  only:
+    - master
+    - develop
+  
+Trigger Dynamic Pipeline:
+  stage: trigger
+  trigger:
+    include:
+      - artifact: '.gitlab-ci.services.yml'
+        job: bootstrap
+    strategy: depend
+  only:
+    - master
+    - develop
+
+.load_functions: &load_functions |
+  # Loading CI functions...
+  function bootstrap() {
+    for d in */ ; do
+      sed -e "s/%SERVICE%/${d%/}/" .gitlab-ci.service.yml.tmpl >> .gitlab-ci.services.yml
+    done
+  }
+
+before_script:
+  - *load_functions
