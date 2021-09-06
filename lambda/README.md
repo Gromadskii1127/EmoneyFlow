@@ -164,3 +164,5 @@ EMoneyFlow
    [aws_secret_terraform]: <https://www.obytes.com/blog/store-app-secrets-on-env-vars-using-aws-secrets-manager-and-terraform>
    [aws_system_manager]: <https://console.aws.amazon.com/systems-manager/parameters?region=us-east-1>
    [aws_get_secret_manager]: <https://medium.com/swlh/using-aws-secrets-manager-to-securely-store-and-retrieve-app-secrets-in-node-js-ada424feb077>
+   
+   
